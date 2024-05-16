@@ -5,7 +5,7 @@ const translate = require('@xrkffgg/google-translate');
 
 // **********************************************************
 const token = core.getInput('token');
-const octokit = new Octokit({ auth: `token ${token}` });
+const octokit = new Octokit({ auth: `token ${github.token}` });
 const context = github.context;
 
 async function run() {
