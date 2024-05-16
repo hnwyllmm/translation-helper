@@ -1,24 +1,38 @@
 const core = require('@actions/core');
 const { Octokit } = require('@octokit/rest');
+import * as webhook from '@octokit/webhooks'
 const github = require('@actions/github');
 const translate = require('@xrkffgg/google-translate');
 
 // **********************************************************
 const token = core.getInput('token');
-const octokit = new Octokit({ auth: `token ${github.token}` });
+const octokit = new Octokit({ auth: `token ${token}` });
 const context = github.context;
 
 async function run() {
   try {
     const { owner, repo } = context.repo;
-    if (
-      (context.eventName === 'issues' ||
-        context.eventName === 'pull_request' ||
-        context.eventName === 'pull_request_target') &&
-      context.payload.action == 'opened'
+    if (((context.eventName === 'issues' ||
+        context.eventName  === 'pull_request' ||
+        context.eventName  === 'pull_request_target') &&
+        context.payload.action == 'opened') ||
+        (github.context.eventName !== 'issue_comment' || github.context.payload.action !== 'created')
     ) {
-      const isIssue = context.eventName === 'issues';
-      if (isIssue) {
+      let number = null
+      let issueUser = null
+      let title = null
+      let body = null
+
+      if (context.eventName === 'issue_comment') {
+        const issueCommentPayload = github.context.payload as webhook.EventPayloads.WebhookPayloadIssueComment
+        number = issueCommentPayload.issue.number;
+        issueUser = issueCommentPayload.comment.user.login
+        body = issueCommentPayload.comment.body
+
+        core.info(`[issue_comment] [number: ${number}] [issueUser: ${issueUser}] [body: ${body}]`);
+        return
+        
+      } else if (context.eventName === 'issues') {
         number = context.payload.issue.number;
         title = context.payload.issue.title;
         body = context.payload.issue.body;
