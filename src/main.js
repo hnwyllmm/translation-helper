@@ -11,11 +11,13 @@ const context = github.context;
 
 async function run() {
   try {
+    const eventName = context.eventName;
+    const action = context.payload.action;
+    core.info(`[eventName: ${eventName}] [action: ${action}]`)
     const { owner, repo } = context.repo;
-    if (((context.eventName === 'issues' || context.eventName  === 'pull_request' 
-          || context.eventName === 'pull_request_target') &&
-        context.payload.action == 'opened') ||
-        (context.eventName === 'issue_comment' && context.payload.action === 'created')
+    if (((eventName === 'issues' || eventName  === 'pull_request' || eventName === 'pull_request_target') &&
+            action == 'opened') ||
+        (eventName === 'issue_comment' && action === 'created')
     ) {
       let number = null
       let issueUser = null
