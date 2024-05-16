@@ -16,7 +16,7 @@ async function run() {
         context.eventName  === 'pull_request' ||
         context.eventName  === 'pull_request_target') &&
         context.payload.action == 'opened') ||
-        (github.context.eventName !== 'issue_comment' || github.context.payload.action !== 'created')
+        (github.context.eventName === 'issue_comment' || github.context.payload.action === 'created')
     ) {
       let number = null
       let issueUser = null
