@@ -1,4 +1,4 @@
-const core = require('@actions/core');
+nst core = require('@actions/core');
 const { Octokit } = require('@octokit/rest');
 import * as webhook from '@octokit/webhooks'
 const github = require('@actions/github');
@@ -70,8 +70,9 @@ async function run() {
         core.info(`[create comment] [number: ${number}]`);
       }
     } else {
+      core.info(`Got eventName=${context.eventName} and action=${context.payload.action}.`)
       core.setFailed(
-        `This Action now only support "issues" or "pull_request" or "pull_request_target" "opened". Got eventName=${context.eventName} and action=${context.payload.action}. If you need other, you can open a issue to https://github.com/actions-cool/translation-helper`,
+        `This Action now only support "issues" or "pull_request" or "pull_request_target" "opened". If you need other, you can open a issue to https://github.com/actions-cool/translation-helper`,
       );
     }
   } catch (error) {
